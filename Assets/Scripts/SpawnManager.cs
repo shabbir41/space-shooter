@@ -13,9 +13,12 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private float _enemySpawnTime = 5.0f;
 
-    private bool _stopSpawming = false;
+    private bool _stopSpawning = false;
+    [SerializeField]
+    private int _enemyCount = 0;
     // Start is called before the first frame update
-    void Start()
+
+    public void StartSpawning()
     {
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerupRoutine());
@@ -29,18 +32,29 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnEnemyRoutine()
     {
-        while (_stopSpawming == false)
+        yield return new WaitForSeconds(3.0f);
+        while (_stopSpawning == false)
         {
-            Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            GameObject newEnemy = Instantiate(_enemyPrefab, posToSpawn, Quaternion.Euler(0, 180, 0));
-            newEnemy.transform.parent = _enemyContainer.transform;
-            yield return new WaitForSeconds(_enemySpawnTime);
+            if(_enemyCount <= 100)
+            {
+                Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
+                GameObject newEnemy = Instantiate(_enemyPrefab, posToSpawn, Quaternion.Euler(0, 180, 0));
+                _enemyCount++;
+                newEnemy.transform.parent = _enemyContainer.transform;
+                yield return new WaitForSeconds(_enemySpawnTime);
+            }
+            else
+            {
+                _stopSpawning = true;
+            }
+
         }
     }
 
     IEnumerator SpawnPowerupRoutine()
     {
-        while(_stopSpawming == false)
+        yield return new WaitForSeconds(3.0f);
+        while (_stopSpawning == false)
         {
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
             int randomPowerup = Random.Range(0, 3);
@@ -51,7 +65,7 @@ public class SpawnManager : MonoBehaviour
 
     public void onPlayerDeath()
     {
-        _stopSpawming = true;
+        _stopSpawning = true;
     }
 
     public void increaseLevel()
