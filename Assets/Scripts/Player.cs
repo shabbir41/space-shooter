@@ -13,6 +13,12 @@ public class Player : MonoBehaviour
     private GameObject _tripleShotPrefab;
     [SerializeField]
     private GameObject _shieldPrefab;
+    [SerializeField]
+    private GameObject _rightEnginePrefab;
+    [SerializeField]
+    private GameObject _leftEnginePrefab;
+    [SerializeField]
+    private PostProcessController _postProcess;
 
     [SerializeField]
     private float _fireRate = 0.3f;
@@ -24,6 +30,7 @@ public class Player : MonoBehaviour
     private bool _isTripleShot = false;
     private bool _isSpeedBoost = false;
     private bool _isShieldActive = false;
+    
 
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
@@ -39,7 +46,11 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("The Spawn Manager is NULL");
         }
-
+        _postProcess = GameObject.Find("Post_Processing_Volume").GetComponent<PostProcessController>();
+        if(_postProcess == null)
+        {
+            Debug.LogError("The post process is Null");
+        }
     }
 
     // Update is called once per frame
@@ -62,10 +73,10 @@ public class Player : MonoBehaviour
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
 
-        if (transform.position.x > 11.3f) {
-            transform.position = new Vector3(-11.3f, transform.position.y, transform.position.z);
-        } else if (transform.position.x < -11.3f) {
-            transform.position = new Vector3(11.3f, transform.position.y, transform.position.z);
+        if (transform.position.x > 10.5f) {
+            transform.position = new Vector3(-10.5f, transform.position.y, transform.position.z);
+        } else if (transform.position.x < -10.5f) {
+            transform.position = new Vector3(10.5f, transform.position.y, transform.position.z);
         }
     }
 
@@ -89,8 +100,15 @@ public class Player : MonoBehaviour
         }
         _lives--;
         _uiManager.UpdateLives(_lives);
-
-        if (_lives <= 0){
+        if(_lives == 2)
+        {
+            _rightEnginePrefab.SetActive(true);
+        } 
+        else if (_lives == 1)
+        {
+            _leftEnginePrefab.SetActive(true);
+        }
+        else if (_lives == 0){
             _spawnManager.onPlayerDeath();
             Destroy(this.gameObject);
         }
@@ -126,6 +144,7 @@ public class Player : MonoBehaviour
         {
             _spawnManager.increaseLevel();
         }
+        _postProcess.UpdateEffect(_score);
     }
 
     IEnumerator TripleShotPowerDownRoutine()

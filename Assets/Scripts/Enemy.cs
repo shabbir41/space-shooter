@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private float _speed = 4.0f;
+    private float _speed = 3.0f;
     private Player _player;
+    private Animator _mAnimator;
 
-    private float _fireRate = 1.0f;
-    private float _canFire = -1f;
     [SerializeField]
     private GameObject _enemyLaserPrefab;
     // Start is called before the first frame update
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        if (_player == null)
+        {
+            Debug.LogError("Player is Null.");
+        }
+        _mAnimator = gameObject.GetComponent<Animator>();
+        if (_mAnimator == null)
+        {
+            Debug.LogError("Animator is Null.");
+        }
     }
 
     // Update is called once per frame
@@ -22,11 +30,6 @@ public class Enemy : MonoBehaviour
     {
         calculateMovement();
 
-        if(Time.time > _canFire)
-        {
-            _canFire = Time.time + _fireRate;
-            Instantiate(_enemyLaserPrefab, transform.position + new Vector3(0, -1.9f, 0), Quaternion.identity);
-        }
     }
 
     void calculateMovement()
@@ -39,7 +42,7 @@ public class Enemy : MonoBehaviour
     }
 
     void randomSpawn(){
-        transform.position = new Vector3(Random.Range(-11f, 11f), 7, 0);
+        transform.position = new Vector3(Random.Range(-10f, 10f), 7, 0);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -49,19 +52,22 @@ public class Enemy : MonoBehaviour
             if(player != null){
                 player.Damage();
             }
-            Destroy(this.gameObject);
+            _mAnimator.SetTrigger("OnEnemyDeath");
+            _speed = 0.0f;
+            Destroy(this.gameObject, 2.5f);
         }
         else if (other.tag == "Laser")
         {
             Destroy(other.gameObject);
-            if(_player != null)
+            if(_player != null && _speed != 0.0f)
             {
                 _player.AddScore(10);
             }
-            Destroy(this.gameObject);
+            _mAnimator.SetTrigger("OnEnemyDeath");
+            _speed = 0.0f;
+            Destroy(this.gameObject, 2.5f);
         }
 
-        
     }
 
 }
