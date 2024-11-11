@@ -5,10 +5,14 @@ using UnityEngine;
 public class Astroid : MonoBehaviour
 {
     [SerializeField]
-    private float _rotateSpeed = 3.0f;
+    private float _rotateSpeed = 5.0f;
     [SerializeField]
     private GameObject _explosionPrefab;
     private SpawnManager _spawnManager;
+    [SerializeField]
+    private AudioClip _clip;
+    private AudioSource _audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +20,14 @@ public class Astroid : MonoBehaviour
         if(_spawnManager == null)
         {
             Debug.LogError("Spawn Manager is Null");
+        }
+        _audioSource = GetComponent<AudioSource>();
+        if(_audioSource == null)
+        {
+            Debug.LogError("Audio Source is NULL.");
+        } else
+        {
+            _audioSource.clip = _clip;
         }
     }
 
@@ -33,6 +45,7 @@ public class Astroid : MonoBehaviour
             if(explosionObj != null)
             {
                 Destroy(other.gameObject);
+                _audioSource.Play();
                 Destroy(explosionObj, 2.5f);
                 _spawnManager.StartSpawning();
                 Destroy(this.gameObject, 0.5f);

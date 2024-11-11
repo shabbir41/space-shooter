@@ -19,6 +19,11 @@ public class Player : MonoBehaviour
     private GameObject _leftEnginePrefab;
     [SerializeField]
     private PostProcessController _postProcess;
+    [SerializeField]
+    private AudioClip _laserShotAudioClip;
+    [SerializeField]
+    private AudioClip _tripleShotlaserClip;
+    private AudioSource _audioSource;
 
     [SerializeField]
     private float _fireRate = 0.3f;
@@ -51,6 +56,12 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("The post process is Null");
         }
+        _audioSource = GetComponent<AudioSource>();
+        if(_audioSource == null)
+        {
+            Debug.LogError("Audio Source is NULL");
+        }
+ 
     }
 
     // Update is called once per frame
@@ -85,10 +96,13 @@ public class Player : MonoBehaviour
         if (_isTripleShot)
         {
             Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+            _audioSource.clip = _tripleShotlaserClip;
         } else
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.0f, 0), Quaternion.identity);
+            _audioSource.clip = _laserShotAudioClip;
         }
+        _audioSource.Play();
     }
 
     public void Damage(){
@@ -140,11 +154,9 @@ public class Player : MonoBehaviour
         {
             _uiManager.UpdateScore(_score);
         }
-        if( _score % 200 == 0)
-        {
-            _spawnManager.increaseLevel();
-        }
+
         _postProcess.UpdateEffect(_score);
+
     }
 
     IEnumerator TripleShotPowerDownRoutine()
@@ -162,5 +174,14 @@ public class Player : MonoBehaviour
             _speed /= _speedMultiplier;
         }
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "EnemyLaser")
+        {
+            Damage();
+            Destroy(other.gameObject);
+        }
     }
 }
