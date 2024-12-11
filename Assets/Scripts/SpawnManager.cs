@@ -47,7 +47,7 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
         while (_stopSpawningEnemies == false)
         {
-            if(_enemyCount < 5)
+            if(_enemyCount < 30)
             {
                 Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
                 GameObject newEnemy = Instantiate(_enemyPrefab, posToSpawn, Quaternion.Euler(0, 180, 0));
@@ -58,12 +58,9 @@ public class SpawnManager : MonoBehaviour
             else
             {
                 _stopSpawningEnemies = true;
+
                 _stopSpawningBosses = false;
                 SpawnBossEnemy();
-            }
-            if (_enemyCount % 10 == 0)
-            {
-                increaseLevel();
             }
         }
     }
@@ -85,7 +82,7 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(15.0f);
         while(_stopSpawningBosses == false)
         {
-            if(_bossCommanderCount < 30)
+            if(_bossCommanderCount < 20)
             {
                 Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
                 GameObject newEnemy = Instantiate(_bossCommanderPrefab, posToSpawn, Quaternion.Euler(0, 180, 0));
@@ -106,16 +103,8 @@ public class SpawnManager : MonoBehaviour
     public void onPlayerDeath()
     {
         _stopSpawningEnemies = true;
-        _stopSpawningPowerups = false;
-    }
-
-    public void increaseLevel()
-    {
-        _enemySpawnTime -= 1.0f;
-        if (_enemySpawnTime == 0.0f)
-        {
-            _enemySpawnTime = 0.5f;
-        }
+        _stopSpawningBosses = true;
+        _stopSpawningPowerups = true;
     }
 
     public void SpawnBossEnemy()

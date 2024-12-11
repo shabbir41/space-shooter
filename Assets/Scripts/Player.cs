@@ -75,7 +75,7 @@ public class Player : MonoBehaviour
     }
 
     void CalculateMovement(){
-                float horizontalInput = Input.GetAxis("Horizontal");
+        float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
