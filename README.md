@@ -3,6 +3,9 @@
 ## Overview  
 This Space Shooter game is a dynamic and challenging arcade-style game developed in Unity using C#. Players engage in battles against waves of enemies, progressing through increasingly difficult levels with adaptive mechanics and immersive visuals.  
 
+## Play the Game  
+Play the game online at: [https://shabbir41.github.io/space-shooter/](https://shabbir41.github.io/space-shooter/)  
+
 ## Features  
 - **Dynamic Gameplay**: Progressive difficulty with decreasing enemy spawn intervals based on enemies count.  
 - **Power-Up System**: Includes triple shots, shields, and speed boosts to enhance gameplay variety.  
@@ -22,6 +25,4 @@ This Space Shooter game is a dynamic and challenging arcade-style game developed
 ## Getting Started  
 Clone the repository and open it in Unity to explore and play the game.  
 
-## Play the Game  
-Play the game online at: [https://shabbir41.github.io/space-shooter/](https://shabbir41.github.io/space-shooter/)  
 
